@@ -3,188 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>من أنا؟ | Who am I?</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2em;
-    }
-
-    .title {
-      text-align: center;
-      margin-bottom: 1em;
-      font-size: 2em;
-      color: #444;
-    }
-
-    .buttons {
-      text-align: center;
-      margin-bottom: 1.5em;
-    }
-
-    .poems {
-      display: flex;
-      gap: 2em;
-      justify-content: space-around;
-      flex-wrap: wrap;
-    }
-
-    .poem {
-      width: 45%;
-      background: white;
-      padding: 1.5em;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      line-height: 1.8;
-      white-space: pre-wrap;
-    }
-
-    .rtl {
-      direction: rtl;
-      text-align: right;
-    }
-
-    .ltr {
-      direction: ltr;
-      text-align: left;
-    }
-
-    button {
-      background: #007acc;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background: #005999;
-    }
-  </style>
+  <title>من أنا؟ | Who am I? | מי אני?</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1 id="main-title" class="title">من أنا؟ | Who am I?</h1>
+    <h1 id="main-title" class="title">من أنا؟ | Who am I? | מי אני?</h1>
 
-    <div class="buttons">
-      <button onclick="reversePoems()">🔄 Reverse Poems</button>
+    <div class="controls">
+      <button class="btn" onclick="reversePoems()">🔄 Reverse Order</button>
+      <button class="btn" onclick="shuffleLanguages()">🎲 Shuffle Languages</button>
     </div>
 
-    <div class="poems">
-      <div id="poem-left" class="poem"></div>
-      <div id="poem-right" class="poem"></div>
+    <div class="poems-container">
+      <div id="poem-1" class="poem">
+        <div class="poem-title" id="title-1"></div>
+        <div id="content-1"></div>
+      </div>
+      <div id="poem-2" class="poem">
+        <div class="poem-title" id="title-2"></div>
+        <div id="content-2"></div>
+      </div>
+      <div id="poem-3" class="poem">
+        <div class="poem-title" id="title-3"></div>
+        <div id="content-3"></div>
+      </div>
     </div>
   </div>
 
-  <script>
-    const arabicLines = [
-      "من أنا؟",
-      "قصيدة مستوحاة من الريح، والجوع، والسؤال",
-      "واضحاً، حاداً، كالسيف:",
-      "يأتي السؤال،",
-      "ووسط هذا الصمت،",
-      "بل من هشاشتي أيضاً.",
-      "لا من البرد فقط،",
-      "أختبئ في معطفي",
-      "أحاول أن ألملم نفسي،",
-      "لكنّه يمرّ فيك.",
-      "لا تراه،",
-      "كالهواء:",
-      "لكنه يُحَس—",
-      "واقعٌ لا يُرى،",
-      "روحٌ تبحث عن حقيقة واقعها.",
-      "معنى لا يُقال،",
-      "أشعر بشيءٍ تحت السطح،",
-      "وأنا؟",
-      "لا أغنية في انتظار المساء.",
-      "لا بيت، لا ظلّ،",
-      "إلى أين يذهبون؟",
-      "على رصيف النسيان.",
-      "مكسورة كقنينة",
-      "إلا من أحلامٍ",
-      "وجيوبهم فارغة",
-      "يعدّون خُطى الجوع،",
-      "أطفالٌ في الشوارع",
-      "كأنني أقاوم زمناً لا يراني.",
-      "وأنا أطوي ياقة معطفي",
-      "تمرّ الريح في قلبي،"
-    ];
-
-    const englishLines = [
-      "Who am I?",
-      "A poem inspired by the wind, hunger, and the question",
-      "Sharp, clear, like a blade—",
-      "the question arrives,",
-      "within this silence.",
-      "Not just from the cold,",
-      "but from my own fragility.",
-      "I hide inside my coat,",
-      "trying to gather what remains of me.",
-      "You do not see it,",
-      "but it passes through you.",
-      "Like the air—",
-      "It is felt,",
-      "not seen—",
-      "a reality unseen,",
-      "a soul seeking the truth of its own existence.",
-      "An unspoken meaning,",
-      "I feel something beneath the surface.",
-      "And I?",
-      "No song waiting in the evening.",
-      "No home, no shade—",
-      "Where do they go?",
-      "On the curb of forgetting.",
-      "Broken like a bottle,",
-      "their pockets hold only",
-      "empty dreams.",
-      "They count the footsteps of hunger,",
-      "children in the streets.",
-      "As if resisting a time that does not see me.",
-      "I fold the collar of my coat—",
-      "the wind passes through my heart."
-    ];
-
-    let reversed = true;
-
-    function renderPoems() {
-      const leftContainer = document.getElementById("poem-left");
-      const rightContainer = document.getElementById("poem-right");
-      const titleElement = document.getElementById("main-title");
-      
-      if (reversed) {
-        // Arabic left, English right (normal)
-        leftContainer.innerHTML = arabicLines.join("\n");
-        leftContainer.className = "poem rtl";
-        rightContainer.innerHTML = englishLines.join("\n");
-        rightContainer.className = "poem ltr";
-        titleElement.textContent = "من أنا؟ | Who Am I?";
-      } else {
-        // English left, Arabic right (reversed)
-        leftContainer.innerHTML = englishLines.join("\n");
-        leftContainer.className = "poem ltr";
-        rightContainer.innerHTML = arabicLines.join("\n");
-        rightContainer.className = "poem rtl";
-        titleElement.textContent = "Who Am I? | من أنا؟";
-      }
-    }
-
-    function reversePoems() {
-      reversed = !reversed;
-      renderPoems();
-    }
-
-    window.onload = renderPoems;
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
