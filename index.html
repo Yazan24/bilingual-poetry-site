@@ -4,7 +4,74 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>من أنا؟ | Who am I?</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2em;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 1em;
+      font-size: 2em;
+      color: #444;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-bottom: 1.5em;
+    }
+
+    .poems {
+      display: flex;
+      gap: 2em;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .poem {
+      width: 45%;
+      background: white;
+      padding: 1.5em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .rtl {
+      direction: rtl;
+      text-align: right;
+    }
+
+    .ltr {
+      direction: ltr;
+      text-align: left;
+    }
+
+    button {
+      background: #007acc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #005999;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -20,6 +87,92 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const arabicLines = [
+      "من أنا؟",
+      "قصيدة مستوحاة من الريح، والجوع، والسؤال",
+      "واضحاً، حاداً، كالسيف:",
+      "يأتي السؤال،",
+      "ووسط هذا الصمت،",
+      "بل من هشاشتي أيضاً.",
+      "لا من البرد فقط،",
+      "أختبئ في معطفي",
+      "أحاول أن ألملم نفسي،",
+      "لكنّه يمرّ فيك.",
+      "لا تراه،",
+      "كالهواء:",
+      "لكنه يُحَس—",
+      "واقعٌ لا يُرى،",
+      "روحٌ تبحث عن حقيقة واقعها.",
+      "معنى لا يُقال،",
+      "أشعر بشيءٍ تحت السطح،",
+      "وأنا؟",
+      "لا أغنية في انتظار المساء.",
+      "لا بيت، لا ظلّ،",
+      "إلى أين يذهبون؟",
+      "على رصيف النسيان.",
+      "مكسورة كقنينة",
+      "إلا من أحلامٍ",
+      "وجيوبهم فارغة",
+      "يعدّون خُطى الجوع،",
+      "أطفالٌ في الشوارع",
+      "كأنني أقاوم زمناً لا يراني.",
+      "وأنا أطوي ياقة معطفي",
+      "تمرّ الريح في قلبي،"
+    ];
+
+    const englishLines = [
+      "Who am I?",
+      "A poem inspired by the wind, hunger, and the question",
+      "Sharp, clear, like a blade—",
+      "the question arrives,",
+      "within this silence.",
+      "Not just from the cold,",
+      "but from my own fragility.",
+      "I hide inside my coat,",
+      "trying to gather what remains of me.",
+      "You do not see it,",
+      "but it passes through you.",
+      "Like the air—",
+      "It is felt,",
+      "not seen—",
+      "a reality unseen,",
+      "a soul seeking the truth of its own existence.",
+      "An unspoken meaning,",
+      "I feel something beneath the surface.",
+      "And I?",
+      "No song waiting in the evening.",
+      "No home, no shade—",
+      "Where do they go?",
+      "On the curb of forgetting.",
+      "Broken like a bottle,",
+      "their pockets hold only",
+      "empty dreams.",
+      "They count the footsteps of hunger,",
+      "children in the streets.",
+      "As if resisting a time that does not see me.",
+      "I fold the collar of my coat—",
+      "the wind passes through my heart."
+    ];
+
+    let reversed = true;
+
+    function renderPoems() {
+      const arContainer = document.getElementById("poem-ar");
+      const enContainer = document.getElementById("poem-en");
+      const arLines = reversed ? [...arabicLines] : [...arabicLines].reverse();
+      const enLines = reversed ? [...englishLines] : [...englishLines].reverse();
+
+      arContainer.innerHTML = arLines.join("\n");
+      enContainer.innerHTML = enLines.join("\n");
+    }
+
+    function reversePoems() {
+      reversed = !reversed;
+      renderPoems();
+    }
+
+    window.onload = renderPoems;
+  </script>
 </body>
 </html>
