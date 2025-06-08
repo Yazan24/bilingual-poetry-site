@@ -13,19 +13,35 @@
     <div class="controls">
       <button class="btn" onclick="reversePoems()">🔄 Reverse Order</button>
       <button class="btn" onclick="shuffleLanguages()">🎲 Shuffle Languages</button>
+      <button class="btn" onclick="stopAllSpeech()">🔇 Stop All Audio</button>
     </div>
 
     <div class="poems-container">
       <div id="poem-1" class="poem">
-        <div class="poem-title" id="title-1"></div>
+        <div class="poem-header">
+          <div class="poem-title" id="title-1"></div>
+          <button class="play-btn" id="play-btn-1" onclick="toggleSpeech(0)">
+            <span class="play-icon">🔊</span>
+          </button>
+        </div>
         <div id="content-1"></div>
       </div>
       <div id="poem-2" class="poem">
-        <div class="poem-title" id="title-2"></div>
+        <div class="poem-header">
+          <div class="poem-title" id="title-2"></div>
+          <button class="play-btn" id="play-btn-2" onclick="toggleSpeech(1)">
+            <span class="play-icon">🔊</span>
+          </button>
+        </div>
         <div id="content-2"></div>
       </div>
       <div id="poem-3" class="poem">
-        <div class="poem-title" id="title-3"></div>
+        <div class="poem-header">
+          <div class="poem-title" id="title-3"></div>
+          <button class="play-btn" id="play-btn-3" onclick="toggleSpeech(2)">
+            <span class="play-icon">🔊</span>
+          </button>
+        </div>
         <div id="content-3"></div>
       </div>
     </div>

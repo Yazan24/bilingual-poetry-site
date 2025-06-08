@@ -104,24 +104,32 @@ const languages = [
     name: 'العربية',
     lines: arabicLines,
     class: 'rtl arabic',
-    title: 'من أنا؟'
+    title: 'من أنا؟',
+    lang: 'ar',
+    voice: null
   },
   {
     name: 'English',
     lines: englishLines,
     class: 'ltr english',
-    title: 'Who Am I?'
+    title: 'Who Am I?',
+    lang: 'en',
+    voice: null
   },
   {
     name: 'עברית',
     lines: hebrewLines,
     class: 'rtl hebrew',
-    title: 'מי אני?'
+    title: 'מי אני?',
+    lang: 'he',
+    voice: null
   }
 ];
 
 let currentOrder = [0, 1, 2];
 let reversed = false;
+let speechUtterances = [null, null, null];
+let speechSynthesis = window.speechSynthesis;
 
 function renderPoems() {
   for (let i = 0; i < 3; i++) {
@@ -160,4 +168,98 @@ function shuffleLanguages() {
   renderPoems();
 }
 
-window.onload = renderPoems;
+window.onload = function() {
+  loadVoices();
+  renderPoems();
+  
+  // Reload voices when they change (some browsers load voices asynchronously)
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+};
+
+function loadVoices() {
+  const voices = speechSynthesis.getVoices();
+  
+  // Find best voices for each language
+  languages[0].voice = voices.find(voice => voice.lang.startsWith('ar')) || 
+                      voices.find(voice => voice.lang.includes('ar')) ||
+                      voices[0]; // fallback
+                      
+  languages[1].voice = voices.find(voice => voice.lang.startsWith('en')) ||
+                      voices.find(voice => voice.lang.includes('en')) ||
+                      voices[0]; // fallback
+                      
+  languages[2].voice = voices.find(voice => voice.lang.startsWith('he')) ||
+                      voices.find(voice => voice.lang.includes('he')) ||
+                      voices.find(voice => voice.lang.startsWith('en')) || // Hebrew fallback to English
+                      voices[0]; // final fallback
+}
+
+function toggleSpeech(poemIndex) {
+  const langIndex = currentOrder[poemIndex];
+  const language = languages[langIndex];
+  const playBtn = document.getElementById(`play-btn-${poemIndex + 1}`);
+  
+  // Stop current speech if playing
+  if (speechUtterances[poemIndex]) {
+    speechSynthesis.cancel();
+    speechUtterances[poemIndex] = null;
+    playBtn.classList.remove('playing');
+    playBtn.querySelector('.play-icon').textContent = '🔊';
+    return;
+  }
+  
+  // Stop all other speeches
+  stopAllSpeech();
+  
+  // Create new utterance
+  const lines = reversed ? [...language.lines].reverse() : language.lines;
+  const text = lines.join(' ');
+  const utterance = new SpeechSynthesisUtterance(text);
+  
+  // Set voice and language
+  if (language.voice) {
+    utterance.voice = language.voice;
+  }
+  utterance.lang = language.lang;
+  utterance.rate = 0.8; // Slightly slower for poetry
+  utterance.pitch = 1.0;
+  
+  // Event handlers
+  utterance.onstart = function() {
+    playBtn.classList.add('playing');
+    playBtn.querySelector('.play-icon').textContent = '⏸️';
+  };
+  
+  utterance.onend = function() {
+    speechUtterances[poemIndex] = null;
+    playBtn.classList.remove('playing');
+    playBtn.querySelector('.play-icon').textContent = '🔊';
+  };
+  
+  utterance.onerror = function() {
+    speechUtterances[poemIndex] = null;
+    playBtn.classList.remove('playing');
+    playBtn.querySelector('.play-icon').textContent = '🔊';
+    console.error('Speech synthesis error');
+  };
+  
+  // Store and start speech
+  speechUtterances[poemIndex] = utterance;
+  speechSynthesis.speak(utterance);
+}
+
+function stopAllSpeech() {
+  speechSynthesis.cancel();
+  
+  // Reset all buttons
+  for (let i = 0; i < 3; i++) {
+    speechUtterances[i] = null;
+    const playBtn = document.getElementById(`play-btn-${i + 1}`);
+    if (playBtn) {
+      playBtn.classList.remove('playing');
+      playBtn.querySelector('.play-icon').textContent = '🔊';
+    }
+  }
+}
