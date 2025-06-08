@@ -75,15 +75,15 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="title">من أنا؟ | Who am I?</h1>
+    <h1 id="main-title" class="title">من أنا؟ | Who am I?</h1>
 
     <div class="buttons">
       <button onclick="reversePoems()">🔄 Reverse Poems</button>
     </div>
 
     <div class="poems">
-      <div id="poem-ar" class="poem rtl"></div>
-      <div id="poem-en" class="poem ltr"></div>
+      <div id="poem-left" class="poem"></div>
+      <div id="poem-right" class="poem"></div>
     </div>
   </div>
 
@@ -158,13 +158,25 @@
     let reversed = true;
 
     function renderPoems() {
-      const arContainer = document.getElementById("poem-ar");
-      const enContainer = document.getElementById("poem-en");
-      const arLines = reversed ? [...arabicLines] : [...arabicLines].reverse();
-      const enLines = reversed ? [...englishLines] : [...englishLines].reverse();
-
-      arContainer.innerHTML = arLines.join("\n");
-      enContainer.innerHTML = enLines.join("\n");
+      const leftContainer = document.getElementById("poem-left");
+      const rightContainer = document.getElementById("poem-right");
+      const titleElement = document.getElementById("main-title");
+      
+      if (reversed) {
+        // Arabic left, English right (normal)
+        leftContainer.innerHTML = arabicLines.join("\n");
+        leftContainer.className = "poem rtl";
+        rightContainer.innerHTML = englishLines.join("\n");
+        rightContainer.className = "poem ltr";
+        titleElement.textContent = "من أنا؟ | Who Am I?";
+      } else {
+        // English left, Arabic right (reversed)
+        leftContainer.innerHTML = englishLines.join("\n");
+        leftContainer.className = "poem ltr";
+        rightContainer.innerHTML = arabicLines.join("\n");
+        rightContainer.className = "poem rtl";
+        titleElement.textContent = "Who Am I? | من أنا؟";
+      }
     }
 
     function reversePoems() {
