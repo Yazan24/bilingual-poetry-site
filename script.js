@@ -65,20 +65,98 @@ const englishLines = [
   "the wind passes through my heart."
 ];
 
-let reversed = true;
+const hebrewLines = [
+  "מי אני?",
+  "שיר בהשראת הרוח, הרעב, והשאלה",
+  "חד, ברור, כמו להב—",
+  "השאלה מגיעה,",
+  "בתוך השקט הזה.",
+  "לא רק מהקור,",
+  "אלא גם מהשבריריות שלי.",
+  "אני מתחבא בתוך המעיל,",
+  "מנסה לאסוף את מה שנשאר ממני.",
+  "אתה לא רואה את זה,",
+  "אבל זה עובר דרכך.",
+  "כמו האוויר—",
+  "זה מורגש,",
+  "לא נראה—",
+  "מציאות בלתי נראית,",
+  "נשמה המחפשת את האמת של קיומה.",
+  "משמעות שלא נאמרת,",
+  "אני מרגיש משהו מתחת לפני השטח.",
+  "ואני?",
+  "אין שיר שמחכה בערב.",
+  "אין בית, אין צל—",
+  "לאן הם הולכים?",
+  "על מדרכת השכחה.",
+  "שבור כמו בקבוק,",
+  "הכיסים שלהם מחזיקים רק",
+  "חלומות ריקים.",
+  "הם סופרים את צעדי הרעב,",
+  "ילדים ברחובות.",
+  "כאילו מתנגד לזמן שלא רואה אותי.",
+  "אני מקפל את צווארון המעיל—",
+  "הרוח עוברת דרך הלב שלי."
+];
+
+const languages = [
+  {
+    name: 'العربية',
+    lines: arabicLines,
+    class: 'rtl arabic',
+    title: 'من أنا؟'
+  },
+  {
+    name: 'English',
+    lines: englishLines,
+    class: 'ltr english',
+    title: 'Who Am I?'
+  },
+  {
+    name: 'עברית',
+    lines: hebrewLines,
+    class: 'rtl hebrew',
+    title: 'מי אני?'
+  }
+];
+
+let currentOrder = [0, 1, 2];
+let reversed = false;
 
 function renderPoems() {
-  const arContainer = document.getElementById("poem-ar");
-  const enContainer = document.getElementById("poem-en");
-  const arLines = reversed ? [...arabicLines] : [...arabicLines].reverse();
-  const enLines = reversed ? [...englishLines] : [...englishLines].reverse();
+  for (let i = 0; i < 3; i++) {
+    const langIndex = currentOrder[i];
+    const language = languages[langIndex];
+    const lines = reversed ? [...language.lines].reverse() : language.lines;
+    
+    const contentElement = document.getElementById(`content-${i + 1}`);
+    const titleElement = document.getElementById(`title-${i + 1}`);
+    const poemElement = document.getElementById(`poem-${i + 1}`);
+    
+    contentElement.innerHTML = lines.join('\n');
+    titleElement.textContent = language.title;
+    poemElement.className = `poem ${language.class}`;
+  }
+  
+  updateMainTitle();
+}
 
-  arContainer.innerHTML = arLines.join("\\n");
-  enContainer.innerHTML = enLines.join("\\n");
+function updateMainTitle() {
+  const titles = currentOrder.map(i => languages[i].title);
+  document.getElementById('main-title').textContent = titles.join(' | ');
 }
 
 function reversePoems() {
   reversed = !reversed;
+  renderPoems();
+}
+
+function shuffleLanguages() {
+  // Simple shuffle algorithm
+  for (let i = currentOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [currentOrder[i], currentOrder[j]] = [currentOrder[j], currentOrder[i]];
+  }
   renderPoems();
 }
 
